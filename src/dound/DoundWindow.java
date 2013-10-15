@@ -7,6 +7,7 @@ package dound;
 import javax.sound.sampled.*;
 import com.sun.speech.freetts.*;
 import java.io.*;
+import javaFlacEncoder.FLAC_FileEncoder;
 
 /**
  *
@@ -27,6 +28,15 @@ public class DoundWindow extends javax.swing.JFrame {
     // the line from which audio data is captured
     TargetDataLine line;
     private String speaktext;
+    
+    void convertWavToFlac(File wavFile){
+        System.out.println("Started Flac encoding...");
+        FLAC_FileEncoder flacEncoder = new FLAC_FileEncoder();
+        File inputFile = new File("hello.wav");
+        File outputFile = new File("/tmp/RecordAudio.flac");
+        flacEncoder.encode(wavFile, outputFile);
+        System.out.println("Flac encoding done");
+    }
 
     public void doSpeak(String speak, String voice) {
         speaktext = speak;
@@ -213,7 +223,7 @@ public class DoundWindow extends javax.swing.JFrame {
             finish();
             recordButton.setText("Record");
             //TODO
-            //Convert to FLAC
+            convertWavToFlac(wavFile);
             //Send to google Speech API
             //Set Lable text with results
         }
