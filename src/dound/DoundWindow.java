@@ -7,6 +7,12 @@ package dound;
 import javax.sound.sampled.*;
 import com.sun.speech.freetts.*;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javaFlacEncoder.FLAC_FileEncoder;
 
 /**
@@ -23,19 +29,75 @@ public class DoundWindow extends javax.swing.JFrame {
     }
     // path of the wav file
     File wavFile = new File("/tmp/RecordAudio.wav");
+    File flacFile = new File("/tmp/RecordAudio.flac");
     // format of audio file
     AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
     // the line from which audio data is captured
     TargetDataLine line;
     private String speaktext;
-    
-    void convertWavToFlac(File wavFile){
+
+    void convertWavToFlac(File wavFile) {
         System.out.println("Started Flac encoding...");
         FLAC_FileEncoder flacEncoder = new FLAC_FileEncoder();
-        File inputFile = new File("hello.wav");
-        File outputFile = new File("/tmp/RecordAudio.flac");
-        flacEncoder.encode(wavFile, outputFile);
+        flacEncoder.encode(wavFile, flacFile);
         System.out.println("Flac encoding done");
+    }
+
+    void stt(File flacFile) {
+        File output = flacFile;
+        try {
+            System.out.println(new Date().toString().substring(11, 20) + " =====> Send google api Start");
+
+//            StringBuilder sb = new StringBuilder("https://www.google.com/speech-api/v1/recognize?client=chromium&lang=en-US&maxresults=10");
+            StringBuilder sb = new StringBuilder("https://www.google.com/speech-api/v1/recognize?client=chromium&lang=en-US");
+            // sb.append("&lang=en");
+//            sb.append("&pfilter=0");
+            // sb.append("&maxresults=2");
+            URL url1 = new URL(sb.toString());
+            URLConnection urlConn = url1.openConnection();
+            urlConn.setDoOutput(true);
+            urlConn.setUseCaches(false);
+            urlConn.setRequestProperty("Content-Type", "audio/x-flac; rate=16000");
+            OutputStream outputStream1 = urlConn.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(output);
+            byte[] buffer = new byte[1024];
+            while ((fileInputStream.read(buffer, 0, 256)) != -1) {
+                outputStream1.write(buffer, 0, 256);
+                outputStream1.flush();
+            }
+            fileInputStream.close();
+            outputStream1.close();
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+            String response2 = br.readLine();
+            br.close();
+
+//        input.delete();
+//            output.delete();
+            System.out.println(new Date().toString().substring(11, 20) + " =====> receive google api result");
+            String resp[] = response2.split("utterance");
+            for (int k = 0; k < resp.length; k++) {
+                resp[k] = resp[k].replaceAll("\":\"", "").replace("\"},{\"", "").replace("\"}]}", "");
+                if (k == 1) {
+                    String temp[] = resp[k].split("\",\"confidence\":");
+                    System.out.println("Confidence :" + temp[1].replace("},{\"", ""));
+                    System.out.println(k + " . " + temp[0]);
+                    sttLabel.setText(temp[0]);
+                } else if (k == resp.length - 1) {
+                    System.out.println(k + " . " + resp[k]);
+                    sttLabel.setText(resp[k]);
+                } else if (k != 0) {
+                    System.out.println(k + " . " + resp[k]);
+                    sttLabel.setText(resp[k]);
+                }
+
+            }
+            //out.println(response2+"<br>");
+//          System.out.println(sampleRate);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(DoundWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DoundWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void doSpeak(String speak, String voice) {
@@ -63,9 +125,9 @@ public class DoundWindow extends javax.swing.JFrame {
      * Defines an audio format
      */
     AudioFormat getAudioFormat() {
-        float sampleRate = 16000;
-        int sampleSizeInBits = 8;
-        int channels = 2;
+        float sampleRate = 22050;
+        int sampleSizeInBits = 16;
+        int channels = 1;
         boolean signed = true;
         boolean bigEndian = true;
         AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
@@ -135,7 +197,6 @@ public class DoundWindow extends javax.swing.JFrame {
         sttTextField = new javax.swing.JTextField();
         sayButton = new javax.swing.JButton();
         recordButton = new javax.swing.JButton();
-        analyzeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,30 +222,22 @@ public class DoundWindow extends javax.swing.JFrame {
             }
         });
 
-        analyzeButton.setText("Analyze");
-        analyzeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analyzeButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sttLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(sayButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sayButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(147, 147, 147)
+                        .addComponent(recordButton)))
                 .addContainerGap(52, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(recordButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(analyzeButton)
-                .addGap(88, 88, 88))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,11 +248,9 @@ public class DoundWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sayButton))
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(recordButton)
-                    .addComponent(analyzeButton))
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addComponent(recordButton)
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         sttLabel.getAccessibleContext().setAccessibleName("stt");
@@ -209,9 +260,9 @@ public class DoundWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sayButtonActionPerformed
-            String txt = sttTextField.getText();
-            this.doSpeak(txt, "kevin");
-            System.out.println(txt);
+        String txt = sttTextField.getText();
+        this.doSpeak(txt, "kevin");
+        System.out.println(txt);
     }//GEN-LAST:event_sayButtonActionPerformed
 
     private void recordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordButtonActionPerformed
@@ -225,12 +276,10 @@ public class DoundWindow extends javax.swing.JFrame {
             //TODO
             convertWavToFlac(wavFile);
             //Send to google Speech API
+            stt(flacFile);
             //Set Lable text with results
         }
     }//GEN-LAST:event_recordButtonActionPerformed
-
-    private void analyzeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeButtonActionPerformed
-    }//GEN-LAST:event_analyzeButtonActionPerformed
 
     private void sttTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sttTextFieldActionPerformed
         // TODO add your handling code here:
@@ -271,7 +320,6 @@ public class DoundWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analyzeButton;
     private javax.swing.JButton recordButton;
     private javax.swing.JButton sayButton;
     private javax.swing.JLabel sttLabel;
