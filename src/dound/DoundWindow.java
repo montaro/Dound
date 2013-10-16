@@ -30,8 +30,8 @@ public class DoundWindow extends javax.swing.JFrame {
 //        this.setUndecorated(true);
     }
     // path of the wav file
-    File wavFile = new File("/tmp/RecordAudio.wav");
-    File flacFile = new File("/tmp/RecordAudio.flac");
+    File wavFile = new File("RecordAudio.wav");
+    File flacFile = new File("RecordAudio.flac");
     // format of audio file
     AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
     // the line from which audio data is captured
@@ -204,9 +204,9 @@ public class DoundWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        sttLabel.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
+        sttLabel.setFont(new java.awt.Font("Ubuntu", 0, 48)); // NOI18N
 
-        sttTextField.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
+        sttTextField.setFont(new java.awt.Font("Ubuntu", 0, 48)); // NOI18N
         sttTextField.setText("Add some to text to say it!");
         sttTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -214,6 +214,7 @@ public class DoundWindow extends javax.swing.JFrame {
             }
         });
 
+        sayButton.setFont(new java.awt.Font("Ubuntu", 0, 48)); // NOI18N
         sayButton.setText("Say it!");
         sayButton.setToolTipText("");
         sayButton.addActionListener(new java.awt.event.ActionListener() {
@@ -222,6 +223,7 @@ public class DoundWindow extends javax.swing.JFrame {
             }
         });
 
+        recordButton.setFont(new java.awt.Font("Ubuntu", 0, 48)); // NOI18N
         recordButton.setText("Record");
         recordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,6 +231,7 @@ public class DoundWindow extends javax.swing.JFrame {
             }
         });
 
+        close.setFont(new java.awt.Font("Ubuntu", 0, 48)); // NOI18N
         close.setText("close");
         close.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,34 +247,38 @@ public class DoundWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sttLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(close)
-                    .addComponent(logoLabel)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(recordButton)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(13, 13, 13)
-                            .addComponent(sayButton))))
-                .addContainerGap(322, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(close)
+                                .addComponent(logoLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42)
+                                .addComponent(sayButton))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(404, 404, 404)
+                        .addComponent(recordButton)))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(sttLabel)
-                .addGap(50, 50, 50)
+                .addGap(66, 66, 66)
                 .addComponent(recordButton)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(93, 93, 93)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sayButton))
-                .addGap(75, 75, 75)
+                .addGap(49, 49, 49)
                 .addComponent(logoLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(close)
-                .addGap(36, 36, 36))
+                .addComponent(close))
         );
 
         sttLabel.getAccessibleContext().setAccessibleName("stt");
