@@ -26,6 +26,8 @@ public class DoundWindow extends javax.swing.JFrame {
      */
     public DoundWindow() {
         initComponents();
+        this.setExtendedState(this.MAXIMIZED_BOTH);
+//        this.setUndecorated(true);
     }
     // path of the wav file
     File wavFile = new File("/tmp/RecordAudio.wav");
@@ -197,9 +199,14 @@ public class DoundWindow extends javax.swing.JFrame {
         sttTextField = new javax.swing.JTextField();
         sayButton = new javax.swing.JButton();
         recordButton = new javax.swing.JButton();
+        close = new javax.swing.JButton();
+        logoLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        sttLabel.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
+
+        sttTextField.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         sttTextField.setText("Add some to text to say it!");
         sttTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,35 +229,49 @@ public class DoundWindow extends javax.swing.JFrame {
             }
         });
 
+        close.setText("close");
+        close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeActionPerformed(evt);
+            }
+        });
+
+        logoLabel.setIcon(new javax.swing.ImageIcon("/home/arefaey/Desktop/994601_410463429079433_1032719732_n.jpg")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sttLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(sayButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(recordButton)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addGap(63, 63, 63)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(close)
+                    .addComponent(logoLabel)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(recordButton)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(13, 13, 13)
+                            .addComponent(sayButton))))
+                .addContainerGap(322, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(sttLabel)
-                .addGap(47, 47, 47)
+                .addGap(50, 50, 50)
+                .addComponent(recordButton)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sttTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sayButton))
-                .addGap(49, 49, 49)
-                .addComponent(recordButton)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addGap(75, 75, 75)
+                .addComponent(logoLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(close)
+                .addGap(36, 36, 36))
         );
 
         sttLabel.getAccessibleContext().setAccessibleName("stt");
@@ -284,6 +305,10 @@ public class DoundWindow extends javax.swing.JFrame {
     private void sttTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sttTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sttTextFieldActionPerformed
+
+    private void closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_closeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,6 +345,8 @@ public class DoundWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton close;
+    private javax.swing.JLabel logoLabel;
     private javax.swing.JButton recordButton;
     private javax.swing.JButton sayButton;
     private javax.swing.JLabel sttLabel;
